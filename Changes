@@ -4,6 +4,13 @@ global:
 releases:
   - author: 'Marcel Gruenauer <marcel@cpan.org>'
     changes:
+      - 'added options for context width, line numbering and colour'
+    date: 2007-11-10T12:11:40Z
+    tags:
+      - NEWFEATURE
+    version: 0.02
+  - author: 'Marcel Gruenauer <marcel@cpan.org>'
+    changes:
       - original version
     date: 2007-11-09T18:32:53Z
     tags: []

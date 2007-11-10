@@ -7,7 +7,8 @@ use Test::More tests => 1;
 use Test::Differences;
 
 
-my $context = Carp::Source::get_context(__FILE__, __LINE__);
+my $context = Carp::Source::get_context(__FILE__, __LINE__,
+    lines => 5, number => 0);
 
 # Some comments to
 # avoid getting the expected
@@ -15,15 +16,19 @@ my $context = Carp::Source::get_context(__FILE__, __LINE__);
 # which would make for recursive weirdness
 
 my $expected = <<EOCONTEXT;
-context for t/01_context.t line 10:
+context for t/02_with_options.t line 10:
 
-   7: use Test::Differences;
-   8: 
-   9: 
-  10: \e[30;43mmy \$context = Carp::Source::get_context(__FILE__, __LINE__);\e[0m
-  11: 
-  12: # Some comments to
-  13: # avoid getting the expected
+use Carp::Source;
+use Test::More tests => 1;
+use Test::Differences;
+
+
+\e[30;43mmy \$context = Carp::Source::get_context(__FILE__, __LINE__,\e[0m
+    lines => 5, number => 0);
+
+# Some comments to
+# avoid getting the expected
+# context into the tested context
 ===========================================================================
 EOCONTEXT
 

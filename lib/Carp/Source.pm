@@ -6,7 +6,7 @@ use utf8;
 use Term::ANSIColor;
 
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 
 use base 'Exporter';
@@ -110,9 +110,8 @@ sub longmess_heavy {
 # Returns a full stack backtrace starting from where it is
 # told.
 sub ret_backtrace {
-  my ($i, @error) = @_;
+  my ($i, $err, %options) = @_;
   my $mess;
-  my $err = join '', @error;
   $i++;
 
   my $tid_msg = '';
@@ -125,7 +124,7 @@ sub ret_backtrace {
   $mess = "$err at $i{file} line $i{line}$tid_msg\n";
 
   while (my %i = caller_info(++$i)) {
-      my $context = get_context($i{file}, $i{line});
+      my $context = get_context($i{file}, $i{line}, %options);
       print $context;
       $mess .= "\t$i{sub_name} called at $i{file} line $i{line}$tid_msg\n";
   }
@@ -134,8 +133,24 @@ sub ret_backtrace {
 }
 
 
+sub format_line {
+    my ($line_number, $text, %options) = @_;
+
+    return "$text\n" unless $options{number};
+    sprintf "%4d: %s\n", $line_number, $text;
+}
+
+
 sub get_context {
-    my ($file, $line) = @_;
+    my ($file, $line, %options) = @_;
+
+    %options = (
+        lines  => 3,
+        number => 1,
+        color  => 'black on_yellow',
+        %options,
+    );
+
     open my $fh, '<', $file or die "can't open $file: $!\n";
     chomp(my @lines = <$fh>);
     close $fh or die "can't close $file: $!\n";
@@ -143,28 +158,24 @@ sub get_context {
     # make calculations easier by having line 1 at element 1
     unshift @lines => '';
 
-    my $CONTEXT = 3;
-
-    my $min_line = $line - $CONTEXT;
+    my $min_line = $line - $options{lines};
     $min_line = 0 if $min_line < 0;
 
-    my $max_line = $line + $CONTEXT;
-
-    my $format = sprintf '%%%dd' => length($max_line);
+    my $max_line = $line + $options{lines};
 
     my $source = "context for $file line $line:\n\n";
 
     for my $c_line ($min_line .. $line - 1) {
         next unless defined $lines[$c_line];
-        $source .= sprintf "$format: %s\n", $c_line, $lines[$c_line];
+        $source .= format_line($c_line, $lines[$c_line], %options);
     }
 
-    $source .= sprintf "$format: %s\n", $line,
-        colored [ 'black on_yellow' ], $lines[$line];
+    $source .=
+        format_line($line, colored([ $options{color} ], $lines[$line]), %options);
 
     for my $c_line ($line + 1 .. $max_line) {
         next unless defined $lines[$c_line];
-        $source .= sprintf "$format: %s\n", $c_line, $lines[$c_line];
+        $source .= format_line($c_line, $lines[$c_line], %options);
     }
 
     $source .= ('=' x 75) . "\n";
@@ -172,7 +183,7 @@ sub get_context {
 }
 
 
-sub source_cluck { warn longmess_heavy(@_) }
+sub source_cluck ($;@) { warn longmess_heavy(@_) }
 
 
 
@@ -189,16 +200,53 @@ Carp::Source - warn of errors with stack backtrace and source context
 
     use Carp::Source 'source_cluck';
     source_cluck 'some error';
+    source_cluck 'some error',
+        lines => 5, number => 0, color => 'yellow on_blue';
 
 =head1 DESCRIPTION
 
-This module exports one function, C<source_cluck()>. It is like L<Carp>'s
-C<cluck()>, but it also displays the source code context of all call frames,
-with three lines before and after each call being shown, and the call
-being highlighted.
+This module exports one function, C<source_cluck()>, which prints stack traces
+with source code extracts to make it obvious what has been called from where.
+
+=over 4
+
+=item source_cluck
+
+    source_cluck 'some error';
+    source_cluck 'some error',
+        lines => 5, number => 0, color => 'yellow on_blue';
+
+Like L<Carp>'s C<cluck()>, but it also displays the source code context of all
+call frames, with three lines before and after each call being shown, and the
+call being highlighted.
+
+It takes as arguments a string (the error message) and a hash of options. The
+following options are recognized:
+
+=over 4
+
+=item lines
+
+Number of lines to display before and after the line reported in the stack
+trace. Defaults to 3.
+
+=item number
+
+Boolean value to indicate whether line numbers should be printed at the
+beginning of the context source code lines. Defaults to yes.
+
+=item color
+
+The color in which to print the source code line reported in the stack trace.
+It has to be a string that L<Term::ANSIColor> understands. Defaults to C<black
+on_yellow>.
+
+=back
 
 This is just a quick hack - not all of C<Carp>'s or even just C<cluck()>'s
 features are present. The code borrows heavily from C<Carp>.
+
+=back
 
 =head1 TAGS
 
