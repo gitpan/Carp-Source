@@ -6,7 +6,7 @@ use utf8;
 use Term::ANSIColor;
 
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 
 use base 'Exporter';
@@ -102,9 +102,22 @@ sub caller_info {
   return wantarray() ? %call_info : \%call_info;
 }
 
+
+sub long_error_loc {
+  my $i;
+  my $lvl = $CarpLevel;
+  {
+    my $pkg = caller(++$i);
+    redo unless 0 > --$lvl;
+  }
+  return $i - 1;
+}
+
+
 sub longmess_heavy {
   return @_ if ref($_[0]); # don't break references as exceptions
-  return ret_backtrace(0, @_);
+  my $i = long_error_loc();
+  return ret_backtrace($i, @_);
 }
 
 # Returns a full stack backtrace starting from where it is
@@ -207,6 +220,9 @@ Carp::Source - warn of errors with stack backtrace and source context
 
 This module exports one function, C<source_cluck()>, which prints stack traces
 with source code extracts to make it obvious what has been called from where.
+
+It does not work for one-liners because there is no file from which to load
+source code.
 
 =over 4
 

@@ -4,6 +4,13 @@ global:
 releases:
   - author: 'Marcel Gruenauer <marcel@cpan.org>'
     changes:
+      - Added Carp::Source::Always
+    date: 2007-11-10T21:55:27Z
+    tags:
+      - NEWFEATURE
+    version: 0.03
+  - author: 'Marcel Gruenauer <marcel@cpan.org>'
+    changes:
       - 'added options for context width, line numbering and colour'
     date: 2007-11-10T12:11:40Z
     tags:
