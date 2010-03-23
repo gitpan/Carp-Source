@@ -1,20 +1,18 @@
 #!/usr/bin/env perl
-
 use warnings;
 use strict;
 
-
 package Foo;
-
+our $VERSION = '1.100820';
 use warnings;
 use strict;
 use Carp::Source 'source_cluck';
-
 use base 'Class::Accessor::Constructor';
-
+#<<<
 __PACKAGE__
     ->mk_constructor
     ->mk_scalar_accessors(qw(firstname lastname));
+#>>>
 
 sub MUNGE_CONSTRUCTOR_ARGS {
     my $self = shift;
@@ -22,15 +20,13 @@ sub MUNGE_CONSTRUCTOR_ARGS {
     (scalar(@_ == 1) && ref($_[0]) eq 'HASH') ? %{ $_[0] } : @_;
 }
 
-
 sub report {
     my $self = shift;
     source_cluck 'munging', lines => 5, number => 0, color => 'yellow on_blue';
 }
 
-
 package main;
-
+our $VERSION = '1.100820';
 my $obj = Foo->new(
     lastname  => 'Shindou',
     firstname => 'Hikaru',

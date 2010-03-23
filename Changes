@@ -1,24 +1,29 @@
----
-global:
-  name: Carp-Source
-releases:
-  - author: 'Marcel Gruenauer <marcel@cpan.org>'
-    changes:
-      - Added Carp::Source::Always
-    date: 2007-11-10T21:55:27Z
-    tags:
-      - NEWFEATURE
-    version: 0.03
-  - author: 'Marcel Gruenauer <marcel@cpan.org>'
-    changes:
-      - 'added options for context width, line numbering and colour'
-    date: 2007-11-10T12:11:40Z
-    tags:
-      - NEWFEATURE
-    version: 0.02
-  - author: 'Marcel Gruenauer <marcel@cpan.org>'
-    changes:
-      - original version
-    date: 2007-11-09T18:32:53Z
-    tags: []
-    version: 0.01
+Revision history for Perl extension Carp-Source
+
+1.100820  2010-03-23 21:24:36 Europe/Vienna
+    - converted the distribution to Dist::Zilla-style
+
+0.09  Thu Jul 25 15:27:43 CEST 2008 (Marcel Gruenauer <marcel@cpan.org>)
+     - Changed dist style and Changes back to standard. People didn't like it -
+       the nail that sticks out gets hammered down.
+     - Added standard test files; this will also help with CPANTS.
+
+0.04  Thu, 29 May 2008 12:01:02 -0000 (Marcel Gruenauer <marcel@cpan.org>)
+     - set the version to 0.04
+     - .shipit: added Twitter step
+     - Makefile.PL: added auto_install() and process_templates()
+     - lib/*: converted to template
+     - updated MANIFEST
+     - updated t/perlcriticrc
+     - .shipit: fixed svk.tagpattern
+
+0.03  Sat, 10 Nov 2007 21:55:27 -0000 (Marcel Gruenauer <marcel@cpan.org>)
+     - Added Carp::Source::Always
+     - tags: NEWFEATURE
+
+0.02  Sat, 10 Nov 2007 12:11:40 -0000 (Marcel Gruenauer <marcel@cpan.org>)
+     - added options for context width, line numbering and colour
+     - tags: NEWFEATURE
+
+0.01  Fri, 09 Nov 2007 18:32:53 -0000 (Marcel Gruenauer <marcel@cpan.org>)
+     - original version
