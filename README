@@ -2,7 +2,7 @@ NAME
     Carp::Source - Warn of errors with stack backtrace and source context
 
 VERSION
-    version 1.100820
+    version 1.101420
 
 SYNOPSIS
         use Carp::Source 'source_cluck';
@@ -60,9 +60,6 @@ FUNCTIONS
     FIXME
 
   get_subname
-    FIXME
-
-  long_error_loc
     FIXME
 
   longmess_heavy

@@ -1,5 +1,10 @@
 Revision history for Perl extension Carp-Source
 
+1.101420  2010-05-22 22:47:43 Europe/Vienna
+    - 'use parent' instead of 'use base'
+    - removed unused variables
+    - removed support for $CarpLevel (Carp.pm doesn't recommend it anyway)
+
 1.100820  2010-03-23 21:24:36 Europe/Vienna
     - converted the distribution to Dist::Zilla-style
 

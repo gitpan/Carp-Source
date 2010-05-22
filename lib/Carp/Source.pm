@@ -3,14 +3,16 @@ use strict;
 use warnings;
 
 package Carp::Source;
-our $VERSION = '1.100820';
+BEGIN {
+  $Carp::Source::VERSION = '1.101420';
+}
 # ABSTRACT: Warn of errors with stack backtrace and source context
 use utf8;
 use Term::ANSIColor;
 use Exporter qw(import);
 our %EXPORT_TAGS = (util => [qw(source_cluck)],);
 our @EXPORT_OK = @{ $EXPORT_TAGS{all} = [ map { @$_ } values %EXPORT_TAGS ] };
-our ($CarpLevel, $MaxArgNums, $MaxEvalLen, $MaxArgLen, $Verbose);
+our ($MaxArgNums, $MaxEvalLen, $MaxArgLen, $Verbose);
 
 # If a string is too long, trims it with ...
 sub str_len_trim {
@@ -65,8 +67,13 @@ sub get_subname {
 sub caller_info {
     my $i = shift(@_) + 1;
 
+    # FIXME Dist::Zilla's [PkgVersion] adds a BEGIN { $DB::VERSION = ... }
+    # here; should skip package DB
+    ## no critic (ProhibitNestedSubs)
     package DB;
-our $VERSION = '1.100820';
+BEGIN {
+  $DB::VERSION = '1.101420';
+}
     my %call_info;
     @call_info{qw(pack file line sub has_args wantarray evaltext is_require)} =
       caller($i);
@@ -88,20 +95,9 @@ our $VERSION = '1.100820';
     return wantarray() ? %call_info : \%call_info;
 }
 
-sub long_error_loc {
-    my $i;
-    my $lvl = $CarpLevel;
-    {
-        my $pkg = caller(++$i);
-        redo unless 0 > --$lvl;
-    }
-    return $i - 1;
-}
-
 sub longmess_heavy {
     return @_ if ref($_[0]);    # don't break references as exceptions
-    my $i = long_error_loc();
-    return ret_backtrace($i, @_);
+    return ret_backtrace(0, @_);
 }
 
 # Returns a full stack backtrace starting from where it is
@@ -175,7 +171,7 @@ Carp::Source - Warn of errors with stack backtrace and source context
 
 =head1 VERSION
 
-version 1.100820
+version 1.101420
 
 =head1 SYNOPSIS
 
@@ -247,10 +243,6 @@ FIXME
 FIXME
 
 =head2 get_subname
-
-FIXME
-
-=head2 long_error_loc
 
 FIXME
 

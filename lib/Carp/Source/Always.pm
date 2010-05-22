@@ -3,13 +3,15 @@ use strict;
 use warnings;
 
 package Carp::Source::Always;
-our $VERSION = '1.100820';
+BEGIN {
+  $Carp::Source::Always::VERSION = '1.101420';
+}
 # ABSTRACT: Warns and dies with stack backtraces and source code context
 use Carp::Source;
 our %options;
 
 sub import {
-    my $class = shift;
+    shift;
     %options = @_;
 }
 
@@ -56,7 +58,7 @@ Carp::Source::Always - Warns and dies with stack backtraces and source code cont
 
 =head1 VERSION
 
-version 1.100820
+version 1.101420
 
 =head1 DESCRIPTION
 

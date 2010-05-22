@@ -3,16 +3,13 @@ use warnings;
 use strict;
 
 package Foo;
-our $VERSION = '1.100820';
 use warnings;
 use strict;
 use Carp::Source 'source_cluck';
-use base 'Class::Accessor::Constructor';
-#<<<
+use parent 'Class::Accessor::Constructor';
 __PACKAGE__
     ->mk_constructor
     ->mk_scalar_accessors(qw(firstname lastname));
-#>>>
 
 sub MUNGE_CONSTRUCTOR_ARGS {
     my $self = shift;
@@ -26,7 +23,6 @@ sub report {
 }
 
 package main;
-our $VERSION = '1.100820';
 my $obj = Foo->new(
     lastname  => 'Shindou',
     firstname => 'Hikaru',
